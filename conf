@@ -1,0 +1,5 @@
+ip  192.168.182.128
+port  8888
+dir  /home/schalke04/UserInputAssistant/data/english_file/
+dict  /home/schalke04/UserInputAssistant/bin/dict/dict.dat
+index  /home/schalke04/UserInputAssistant/bin/index/index.dat
