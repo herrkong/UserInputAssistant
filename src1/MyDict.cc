@@ -7,7 +7,6 @@ namespace  hk
 
 void MyDict::init(const char * dictFilePath,const char * indexFilePath)
 {
-    cout<<"进入MyDict了么？nmb"<<endl;
     ifstream ifsDict(dictFilePath);
     string word;
     int wordFreq;
@@ -32,7 +31,6 @@ void MyDict::init(const char * dictFilePath,const char * indexFilePath)
         }
         ifsIndex.close();
     }
-    cout<<"Debug2-->MyDict::init()"<<endl;
 }
 
 Dict & MyDict::getDict()
@@ -44,5 +42,7 @@ IndexTable & MyDict::getIndexTable()
 {
     return _indexTable;
 }
+
+MyDict * MyDict::_pInstance = MyDict::getInstance(); //饱汉模式
 
 }//end of namespace hk

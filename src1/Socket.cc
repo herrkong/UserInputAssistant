@@ -43,7 +43,7 @@ Socket::~Socket()
     cout<<"~Socket()"<<endl;
 }
 
-void Socket::shutdownwrite()
+void Socket::shutdownWrite()
 {
    ::shutdown(_fd,SHUT_WR);
 }

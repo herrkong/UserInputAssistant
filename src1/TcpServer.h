@@ -17,15 +17,16 @@ class TcpServer
 {
 public:
     TcpServer(const string & ip,unsigned short port);
-    void start();
+    void start();  //开始服务
+    void stop();   //停止服务
 
-    //为什么都是右值引用
+    //设置回调函数
     void setConnectionCallback(TcpConnectionCallback && cb);
     void setMessageCallback(TcpConnectionCallback  && cb);
     void setCloseCallback(TcpConnectionCallback && cb);
 
 private:
-    Acceptor _acceptor;
+    Acceptor _acceptor;//服务端接受器
     EventLoop _loop;
 
 };

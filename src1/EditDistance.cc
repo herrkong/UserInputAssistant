@@ -11,7 +11,7 @@ EditDistance::EditDistance(const string & word1,const string & word2)
 :_word1(word1)
 ,_word2(word2)
 {
-    cout<<"EditDistance(const string & _word1,const string & _word2)"<<endl;
+   // cout<<"EditDistance(const string & _word1,const string & _word2)"<<endl;
 }
 
 int EditDistance::get()
