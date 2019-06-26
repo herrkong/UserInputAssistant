@@ -6,7 +6,7 @@ using namespace hk;
 
 int main()
 {
-    Configuration conf("/home/schalke04/UserInputAssistant/conf");
+    Configuration conf("../conf");
     
     auto configMap = conf.getConfigMap();
 

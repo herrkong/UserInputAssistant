@@ -46,7 +46,7 @@ void DictProducer::build_dict() //创建英文词典
     {
         //cout<<"debug1"<<endl;
         string filepath =
-        ("/home/schalke04/UserInputAssistant/data/english_file/")+ *it;
+        ("../data/english_file/")+ *it;
         //cout<<"filepath: "<<filepath<<endl;
         ifstream ifs;
         ifs.open(filepath);

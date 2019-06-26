@@ -22,19 +22,28 @@ void MyTask::execute()
 void MyTask::statistic(set<int> & iset)
 {
 
+    cout<<"进入statistic()"<<endl;
     auto dict = _dict.getDict();
+    //为什么一旦失败 我连词典都没拿到。
+    cout<<"得到词典了么？"<<endl;
     MyResult temp;
-
+    
+    //就没进入for循环
     for(auto iter = iset.begin();iter != iset.end();++iter )
     {
+        cout<<"进入了for循环"<<endl;
         temp._word = dict[*iter].first;
         temp._iFreq = dict[*iter].second;
         temp._iDist = distance(dict[*iter].first);
        
        // if(temp._iDist < 10 ) 
-       // {
+       // {   
+            cout<<"push-->"<<temp._word<<endl;
             _resultQue.push(temp);//问题在这里 
-       // }
+            cout<<"push-->"<<temp._word<<"finished"<<endl;    
+
+        // }
+        cout<<"cnm2"<<endl;
     
     }
 }
