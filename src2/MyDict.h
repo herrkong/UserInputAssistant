@@ -41,8 +41,8 @@ public:
     }
 
 private:
-    MyDict(){ cout<<"MyDict()"<<endl; }
-    ~MyDict() { cout<<"~MyDict()"<<endl; }
+    MyDict(){};
+    ~MyDict(){};
 private:
    static  MyDict * _pInstance;
    Dict _dict;  //词典

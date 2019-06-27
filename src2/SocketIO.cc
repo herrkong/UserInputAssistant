@@ -15,12 +15,12 @@ namespace  hk
 SocketIO::SocketIO(int fd)
     :_fd(fd)
 {
-    cout<<"SocketIO(int fd)"<<endl;
+   // cout<<"SocketIO(int fd)"<<endl;
 }
 
 SocketIO::~SocketIO()
 {
-    cout<<"~SocketIO()"<<endl;
+   // cout<<"~SocketIO()"<<endl;
 }
 
 int  recvCyCle(int newFd,void * p,int len)
@@ -39,7 +39,7 @@ int  recvCyCle(int newFd,void * p,int len)
         total = total + ret ;
     }
 
-    return 0;
+    return total;
 }
 
 //小火车协议
@@ -57,10 +57,10 @@ int SocketIO::sendTrain(const char * buf)
 int SocketIO::recvTrain(char * buf)
 {
     Train_t train;
-    recvCyCle(_fd,&train.dataLen,4);
-    recvCyCle(_fd,&train.buf,train.dataLen);
+    int ret1=recvCyCle(_fd,&train.dataLen,4);//先接文件长度
+    int ret2=recvCyCle(_fd,&train.buf,train.dataLen);//再接文件内容
     strcpy(buf,train.buf);
-    return 0;
+    return ret1+ret2;
 }
 
 

@@ -75,9 +75,9 @@ void EventLoop::waitEpollFd()
 			} else if(fd == _eventfd) {
 				if(_eventList[idx].events & EPOLLIN) {
 					handleRead();
-					cout << ">>before doPendingFunctors()" << endl;
+				   //	cout << ">>before doPendingFunctors()" << endl;
 					doPendingFunctors();//在这里发送数据
-					cout << ">>after doPendingFunctors()" << endl;
+					//cout << ">>after doPendingFunctors()" << endl;
 				}
 			} else {
 				//处理消息

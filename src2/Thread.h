@@ -18,7 +18,7 @@ public:
      ,_isRunning(false)
      ,_cb(std::move(cb))
     {
-        cout<<"Thread()"<<endl;
+       // cout<<"Thread()"<<endl;
     }
     ~Thread();
 

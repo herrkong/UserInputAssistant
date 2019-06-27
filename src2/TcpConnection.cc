@@ -30,14 +30,17 @@ TcpConnection::~TcpConnection()
 
 string TcpConnection::receive()
 {
-	char buff[65536] = {0};
-	_socketIo.readline(buff, sizeof(buff));
-	return string(buff);
+	char buf[65536] = {0};
+	//_socketIo.readline(buff, sizeof(buff));
+	_socketIo.recvTrain(buf);   
+    return string(buf);
 }
 	
 void TcpConnection::send(const string & msg)
 {
-	_socketIo.writen(msg.c_str(), msg.size());
+	//_socketIo.writen(msg.c_str(), msg.size());
+    _socketIo.sendTrain(msg.c_str());
+
 }
 
 void TcpConnection::sendInLoop(const string & msg)
@@ -58,8 +61,8 @@ void TcpConnection::shutdown()
 string TcpConnection::toString() const
 {
 	std::ostringstream oss;
-	oss << _localAddr.ip() << ":" << _localAddr.port() << " --> "
-		<< _peerAddr.ip() << ":" << _peerAddr.port();
+	oss <<"主机服务器:"<<_localAddr.ip() << ":"<<_localAddr.port() << " --> "
+		<<"客户端:"<<_peerAddr.ip() << ":" << _peerAddr.port();
 	return oss.str();
 }
 

@@ -11,7 +11,7 @@ Acceptor::Acceptor(unsigned short port)
 :_addr(port)
 ,_listensock()
 {
-    cout<<"Acceptor(port)"<<endl;
+   // cout<<"Acceptor(port)"<<endl;
 }
 
 
@@ -20,13 +20,13 @@ Acceptor::Acceptor(const string & ip,unsigned short port)
 ,_listensock()
 {
     
-    cout<<"Acceptor(string & ip,unsigned short port)"<<endl;
+    //cout<<"Acceptor(string & ip,unsigned short port)"<<endl;
 }
 
 
 Acceptor::~Acceptor()
 {
-    cout<<"~Acceptor()"<<endl;
+    //cout<<"~Acceptor()"<<endl;
 }
 
 

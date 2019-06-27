@@ -10,7 +10,7 @@ MyTask::MyTask(MyDict & dict,const string & queryWord,const TcpConnectionPtr & c
 ,_queryWord(queryWord)
 ,_conn(conn)
 {
-    cout<<"MyTask()"<<endl;
+   // cout<<"MyTask()"<<endl;
 }
 
 void MyTask::execute()
@@ -75,28 +75,34 @@ int MyTask::distance(const string & rhs)
     return editdist.get();
 }
 
+
 void MyTask::response()
 {   
     //采用json数据格式发送
     Json::Value root;
     
-    root["word1"] = Json::Value(_resultQue.top()._word);
-    _resultQue.pop();
-    root["word2"] = Json::Value(_resultQue.top()._word);
-    _resultQue.pop();
-    root["word3"] = Json::Value(_resultQue.top()._word);
+    if(_resultQue.empty())
+    {  
+        _conn->sendInLoop("No match words");
+    }
+    else
+    {
+        root["word1"] = Json::Value(_resultQue.top()._word);
+        _resultQue.pop();
+        root["word2"] = Json::Value(_resultQue.top()._word);
+        _resultQue.pop();
+        root["word3"] = Json::Value(_resultQue.top()._word);
 
-    Json::FastWriter fw;
-    stringstream ss;
-    ss<<fw.write(root);
-    string  ans; 
-    ss>>ans;
-    
-    _conn->sendInLoop(ans);
-   
-    ResultQue empty;
-    _resultQue.swap(empty);//清空队列
+        Json::FastWriter fw;
+        stringstream ss;
+        ss<<fw.write(root);
+        string  ans; 
+        ss>>ans;
+        
+        _conn->sendInLoop(ans);
+        ResultQue empty;
+        _resultQue.swap(empty);//清空队列
+    }
 }
 
 }//end of namespace hk
-

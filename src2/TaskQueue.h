@@ -22,7 +22,7 @@ public:
      ,_notEmpty(_mutex)
      ,_flag(true)
     {
-        cout<<"TaskQueue()"<<endl;
+       // cout<<"TaskQueue()"<<endl;
     }
 
     bool full() const;

@@ -7,7 +7,7 @@ TcpServer::TcpServer(const string & ip,unsigned short port)
 :_acceptor(ip,port)
 ,_loop(_acceptor)
 {
-    cout<<"TcpServer(const string & ip,unsigned short port)"<<endl;
+   // cout<<"TcpServer(const string & ip,unsigned short port)"<<endl;
 }
 
 

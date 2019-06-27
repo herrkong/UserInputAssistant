@@ -10,7 +10,8 @@ UserInputAssitant::UserInputAssitant(const string & configFilePath)
 ,_threadpool(4,10)
 {
     _threadpool.start();
-    cout<<"初始化UserInputAssistant()"<<endl;
+    cout<<"服务器准备就绪!"<<endl;
+
 }
 
 void UserInputAssitant::onConnection(const TcpConnectionPtr & conn)

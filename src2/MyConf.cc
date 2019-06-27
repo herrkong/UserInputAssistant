@@ -19,7 +19,7 @@ MyConf::MyConf(const string & filepath)
         cout<<s1<<" "<<s2<<endl;
         _configMap.insert(make_pair(s1,s2));
     }
-    cout<<"MyConf(const string & filepath)"<<endl;
+   // cout<<"MyConf(const string & filepath)"<<endl;
 }
 
 ConfigMap & MyConf::getConfigMap()

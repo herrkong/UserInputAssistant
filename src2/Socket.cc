@@ -15,7 +15,7 @@ namespace  hk
 Socket::Socket(int fd)                                                  
 :_fd(fd)
 {
-    cout<<"Socket(int fd)"<<endl;
+   // cout<<"Socket(int fd)"<<endl;
 
 }
 
@@ -28,7 +28,7 @@ Socket::Socket()
         perror("socket()");
     }
 
-    cout<<"Socket()"<<endl;
+    //cout<<"Socket()"<<endl;
 
 }
 
@@ -40,7 +40,7 @@ int Socket::fd() const
 Socket::~Socket()
 {   
     ::close(_fd);
-    cout<<"~Socket()"<<endl;
+    //cout<<"~Socket()"<<endl;
 }
 
 void Socket::shutdownWrite()

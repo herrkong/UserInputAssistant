@@ -22,7 +22,7 @@ public:
      ,_taskque(queSize)
      ,_isExit(false)
     {
-        cout<<"Threadpool()"<<endl;
+       // cout<<"Threadpool()"<<endl;
         _threads.reserve(_threadNum);
     }
     

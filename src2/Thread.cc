@@ -13,7 +13,7 @@ namespace hk
 
 Thread::~Thread()
 {
-    cout<<"~Thread()"<<endl;
+   // cout<<"~Thread()"<<endl;
     if(_isRunning)
     {
         pthread_detach(_pthid);
