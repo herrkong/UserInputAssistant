@@ -10,9 +10,10 @@ int main()
     
     auto configMap = conf.getConfigMap();
 
-    DictProducer dictProducer(configMap["dir"], configMap["dict"]); 
+    DictProducer dictProducer(configMap["dir"],configMap["ch_dir"], configMap["dict"]); 
 
     dictProducer.build_dict();
+    dictProducer.build_chdict();
     dictProducer.store_dict();
     //dictProducer.show_dict();
     

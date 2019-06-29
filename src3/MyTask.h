@@ -46,13 +46,14 @@ public:
     void queryIndexTable();//查询索引表
     void insertQueue(); //插入优先级队列
     void statistic(set<int> & iset);//进行计算
-
+    int length(const string & str); //获取单词长度
+    int nBytesCode(const char ch);//获取每个字所占字节数
     int  distance(const string & rhs);//计算最小编辑距离
     void response(); //待发送的查询结果
     //void response(Cache & cache);
 
 private:
-    MyDict &_dict;//词典
+    MyDict & _dict;//词典
     string _queryWord;   //待查询单词
     ResultQue _resultQue;  //保存候选结果集的优先级队列
     TcpConnectionPtr _conn;

@@ -6,7 +6,7 @@ namespace  hk
 {
 
 
-//初始化英文词典和英文字母索引表
+//初始化中英文词典和索引表
 void MyDict::en_init(const char * EnDictFilePath,const char * EnIndexFilePath)
 {
 

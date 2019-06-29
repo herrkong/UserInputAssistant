@@ -24,7 +24,31 @@ void IndexProducer::read_dict()
     ifs.close();
 }
 
+int IndexProducer::nBytesCode(const char ch)
+{
+    //计算每个字的长度
+    if(ch & (1<<7))
+    {
+        int nBytes = 1;
+        for(int i =0;i!=6;++i)
+        {   //utf-8最大占6个字节
+            if(ch & (1<<(6-i)))
+            {
+                ++nBytes;
+            }
+            else
+            {
+                break;
+            }
+        }//for
+        return nBytes;
+    }//if
+    return 1;
+}
 
+
+#if 0
+//需要修改这一块代码了。中英文索引。
 void IndexProducer::build_index()
 {
     for(char ch = 'a';ch<='z';++ch) 
@@ -42,6 +66,31 @@ void IndexProducer::build_index()
         }
     }
 }
+#endif
+
+void IndexProducer::build_index()
+{
+    string word;
+    int location=0; //单词或字的下标
+    for(auto & pair :_vecdict )
+    {
+        word=pair.first;
+        int nBytes;
+        string ch;
+        size_t cur = 0;
+        while(cur != word.size())
+        {
+           nBytes = nBytesCode(word[cur]);//获取当前字所占字符数
+           ch = word.substr(cur,nBytes);
+           //将word前nBytes个字符解析成单个字
+           cur+=nBytes;
+           _mapindex[ch].insert(location);
+        }//while
+        location++;
+    }
+   // cout<<"创建索引完成。"<<endl;
+}
+
 
 void IndexProducer::store_index()
 {

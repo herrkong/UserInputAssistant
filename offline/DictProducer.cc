@@ -1,4 +1,5 @@
 #include "../include/DictProducer.h"
+#include "../include/cppjieba/Jieba.hpp"
 #include <iostream>
 #include <fstream>
 #include <errno.h>
@@ -6,27 +7,36 @@
 #include <dirent.h>
 #include <iterator>
 
+
 namespace  hk
 {
+
+
+const char * const DICT_PATH = "../include/cppjieba/dict/jieba.dict.utf8";////最大概率法分词所使用的词典路径
+const char * const HMM_PATH = "../include/cppjieba/dict/hmm_model.utf8";//隐式马尔科夫模型
+const char * const USER_DICT_PATH = "../include/cppjieba/dict/user.dict.utf8";//用户自定义词典路径
+const char * const IDF_PATH = "../include/cppjieba/dict/idf.utf8"; //IDF路径
+const char * const STOP_WORD_PATH = "../include/cppjieba/dict/stop_words.utf8";//分割词路径
+
+
+
 //初始化词典 传入语料库地址 待装入词典路径
-DictProducer::DictProducer(const string & dir,const string & filepath)
+DictProducer::DictProducer(const string & dir,const string & ch_dir,const string & filepath)
 :_dir(dir)
+,_ch_dir(ch_dir)
 ,_filepath(filepath)
 {
-    //把语料库中的所有文件名搞到vector中
+    //把语料库中的英文文件名搞到vector中
     DIR * d = opendir(_dir.c_str());
-    //cout<<"debug2"<<endl;
-    //cout<<_dir<<endl;
     if(!d)
     {
         perror("opendir");
 
     }
-   // cout<<"debug3"<<endl;
     struct dirent * p ;
+
     while((p = readdir(d)))
     {
-       // cout<<"debug4"<<endl;//没进入while循环
         if(!strcmp(p->d_name,".") || !strcmp(p->d_name,".."))
         {
             continue;
@@ -34,20 +44,40 @@ DictProducer::DictProducer(const string & dir,const string & filepath)
         _files.push_back(p->d_name);
 
     }
-    cout<<"DictProducer(const string & dir)"<<endl;
+    closedir(d);
+    
+    //处理中文语料
+    DIR * d_ch = opendir(_ch_dir.c_str());
+    if(!d_ch)
+    {
+        perror("opendir");
+    }    
+    
+    struct dirent * p_ch;
+
+    while((p_ch = readdir(d_ch)))
+    {
+        if(!strcmp(p_ch->d_name,".") || !strcmp(p_ch->d_name,".."))
+        {
+            continue;
+        }
+        _ch_files.push_back(p_ch->d_name);
+    }
+    closedir(d_ch);
+    
+    cout<<"DictProducer(const string & dir,const string & ch_dir,const string & filepath )"<<endl;
 
 }
 
 
 void DictProducer::build_dict() //创建英文词典
 {
-
+ 
     for(auto it=_files.begin() ;it!=_files.end(); ++it )
     {
-        //cout<<"debug1"<<endl;
         string filepath =
         ("../data/english_file/")+ *it;
-        //cout<<"filepath: "<<filepath<<endl;
+        cout<<filepath<<endl;
         ifstream ifs;
         ifs.open(filepath);
         if(!ifs.good())
@@ -64,16 +94,41 @@ void DictProducer::build_dict() //创建英文词典
             }
             _dict[word]++;
         }   
-    }
+    }//for
+
 }
 
-#if 0
-//待补充
-void DictProducer::build_cn_dict()//创建中文词典
+void DictProducer::build_chdict()  //创建中文词典
 {
+    using namespace cppjieba;
+    for(auto & file:_ch_files)//遍历一份中文文件
+    {
+        string filepath = ("../data/chinese_file/") + file ;
+        cout<<filepath<<endl;
+        ifstream ifs;
+        ifs.open(filepath);
+        if(!ifs.good())
+        {
+            perror("open");
+        }
+        Jieba jieba(DICT_PATH,HMM_PATH,USER_DICT_PATH,IDF_PATH,
+                        STOP_WORD_PATH);
+        string fulltext;
+        while(ifs>>fulltext) //对中文进行分词
+        {
+            vector<string> result;
+            jieba.Cut(fulltext,result,true);
+            for(auto & word:result)
+            {
+               // cout<<word<<endl;
+                ++_dict[word];
+            }
+        }//while
+        ifs.close();
+    }//for
 
 }
-#endif
+
 
 void DictProducer::store_dict()//将词典写入文件
 {
@@ -92,6 +147,12 @@ void DictProducer::show_files() const //查看文件路径
     {
         cout<<("../data/english_file/")+filename<<endl;
     }
+
+    for(auto & filename:_ch_files)
+    {
+        cout<<("../data/chinese_file/")+filename<<endl;
+    }
+
     cout<<endl;
 }
 
