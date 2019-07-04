@@ -156,7 +156,7 @@ void do_service(int sockfd)
             Json::Reader reader;
             Json::Value root;
             //parse用于从一个字符串中解析出json对象
-#if 1
+#if 0
             if(reader.parse(recvbuf,root))
             {
                 string word1 = root["word1"].asString();
@@ -168,36 +168,38 @@ void do_service(int sockfd)
             //stringify用于从一个对象解析出字符串，
 #endif 
             //解析收到的jason字符串
-#if 0          
             size_t n = 3 ;
-            vector<string> messages(3);
+            //vector<string> messages(3);
             cout<<"从服务器接收到候选词: "<<endl;
             if(reader.parse(recvbuf,root))
             {
                 //cout<<"233"<<endl;
                 for(size_t idx = 0;idx < n ;++idx)
                 {
+
+
+                    cout<<root[idx].asString()<<" ";
                    // cout<<"666"<<endl;
-                    messages[idx] = root[idx].asString();
+                   // messages[idx] = root[idx].asString();
                    // cout<<"777"<<endl;
                    // cout<<messages[idx]<<endl;
                    // cout<<"999"<<endl;
                 }
             }
 
-            for(auto & word:messages)
-            {
-                cout<<word<<" ";
-            }
+           // for(auto & word:messages)
+           // {
+               // cout<<word<<" ";
+           // }
             cout<<endl;
 
             recvbuf.clear();
             sendbuf.clear();
-#endif
-           // printf("receive msg : %s\n", recvbuf);
+
+            //printf("receive msg : %s\n", recvbuf);
 
             // memset(recvbuf, 0, sizeof recvbuf);
-           // memset(sendbuf, 0, sizeof sendbuf);
+            // memset(sendbuf, 0, sizeof sendbuf);
 
         }
     }

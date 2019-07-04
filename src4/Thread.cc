@@ -1,15 +1,38 @@
 //基于对象 不使用继承加多态
-
-
+#pragma once
 #include "Thread.h"
 #include <iostream>
 using std::endl;
 using std::cout;
 
-
-
 namespace hk
 {
+__thread int threadNum = 0 ;
+
+using ThreadCallback=std::function<void()>;
+
+struct ThreadData
+{
+    int _Num ;
+    ThreadCallback _cb ;
+
+    ThreadData(const int Num,ThreadCallback cb)
+    :_Num(Num)
+    ,_cb(cb)
+    {} 
+
+    void runInThread()
+    {
+        //任务执行之前:do something
+        threadNum = _Num ;
+        cout<<"我是"<<threadNum<<" 号线程"<<endl;
+        if(_cb)
+        {
+            _cb();
+        }
+        //任务执行之后:do something
+    }
+};
 
 Thread::~Thread()
 {
@@ -20,11 +43,11 @@ Thread::~Thread()
         _isRunning=false;
     }
 }
-
+ 
 void Thread::start()
 {
-
-    if(pthread_create(&_pthid,NULL,threadFunc,this))
+    ThreadData * data = new ThreadData(_Num,_cb);
+    if(pthread_create(&_pthid,NULL,threadFunc,data))
     {
         perror("pthread_create");
         return;
@@ -45,11 +68,12 @@ void Thread::join()
 void * Thread::threadFunc(void * arg)
 {  
     
-    Thread * pthread =static_cast<Thread *>(arg);
-    if(pthread)
+    ThreadData * pdata = static_cast<ThreadData *>(arg);
+    if(pdata)
     {
-        pthread->_cb();
+        pdata->runInThread();
     }
+    delete pdata;
     return nullptr;
 }
 

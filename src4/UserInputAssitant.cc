@@ -1,3 +1,5 @@
+
+#pragma once
 #include "UserInputAssitant.h"
 
 namespace  hk

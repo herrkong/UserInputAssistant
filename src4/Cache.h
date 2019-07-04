@@ -19,6 +19,8 @@ struct CacheNode
 };
 
 
+using HashMap = unordered_map<string ,CacheNode * >;
+
 class Cache
 {
 
@@ -60,10 +62,6 @@ public:
     void insertToFront(CacheNode * node);
     //cache满了 淘汰一些缓存
     void removeElement(); 
-    //从文件中读取缓存信息
-    void readFromFile(const string & filename);
-    //将缓存信息写入文件
-    void writeToFile(const string & filename);
     //查找某个键值
     string get(string & key);
     //删除结点
@@ -72,9 +70,12 @@ public:
    // void update(const Cache & rhs);
     //打印当前缓存信息
     void print();
+    
+
+    HashMap & gethashMap();
 
 private:
-    unordered_map<string,CacheNode *> _hashMap; 
+    HashMap _hashMap; 
     CacheNode * _head; //指向双向链表的头结点
     CacheNode * _tail; //指向双向链表的尾结点
     int _capacity; //Cache的容量 其实就是双向链表的长度

@@ -9,19 +9,26 @@ using std::cout;
 namespace  hk 
 {
 
-class Thread:public Noncopyable
+extern __thread int threadNum; //全局变量threadNum
+
+class Thread
+:public Noncopyable
 {
+
 public:
     using ThreadCallback=std::function<void()>;
-    Thread(ThreadCallback && cb) //移动语义
+    
+    Thread(ThreadCallback && cb,const int Num) //移动语义
     :_pthid(0)
      ,_isRunning(false)
      ,_cb(std::move(cb))
+     ,_Num(Num)
     {
-       // cout<<"Thread()"<<endl;
+       cout<<_Num<<"Thread()"<<endl;
     }
+   
     ~Thread();
-
+    
     void start();
     void join();
 
@@ -32,6 +39,7 @@ private:
     pthread_t _pthid;
     bool _isRunning;
     ThreadCallback _cb;
+    int _Num ;//线程编号
 
 };
 

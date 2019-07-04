@@ -1,4 +1,5 @@
 #pragma once
+#include "CacheManager.h" //新增
 #include "TcpConnection.h"
 #include "MyDict.h"
 #include <queue>
@@ -49,8 +50,8 @@ public:
     int length(const string & str); //获取单词长度
     int nBytesCode(const char ch);//获取每个字所占字节数
     int  distance(const string & rhs);//计算最小编辑距离
-    void response(); //待发送的查询结果
-    //void response(Cache & cache);
+    void  response(); //待发送的查询结果
+    void response(Cache & cache);//写进缓存
 
 private:
     MyDict & _dict;//词典
@@ -58,6 +59,7 @@ private:
     ResultQue _resultQue;  //保存候选结果集的优先级队列
     TcpConnectionPtr _conn;
     //TcpConnection对象 建立连接 将候选词发送给客户端
+    CacheManager * _pCacheManager;
     set<int> _words;
 };
 }//end of namespace hk

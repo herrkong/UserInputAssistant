@@ -31,10 +31,9 @@ public:
     void start();
     void stop();
     void setTimer(int initTime,int intervalTime);
-
+    void handleRead();
 private:
     int createTimerfd();
-    void handleRead();
 
 
 private:

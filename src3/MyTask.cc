@@ -217,6 +217,17 @@ void MyTask::response()
     }
     else
     {
+
+        size_t n = 3 ;//发送三个候选词
+        for(size_t idx = 0 ;idx < n ;idx++)
+        {
+            root[idx] =Json::Value(_resultQue.top()._word);
+            cout<<root[idx]<<" ";
+            //带引号的string 
+            _resultQue.pop();
+        }
+
+#if 0
         root["word1"] = Json::Value(_resultQue.top()._word);
         _resultQue.pop();
         root["word2"] = Json::Value(_resultQue.top()._word);
@@ -228,7 +239,9 @@ void MyTask::response()
         ss<<fw.write(root);
         string  ans; 
         ss>>ans;
-        
+#endif  
+        Json::FastWriter fw ;
+        string ans = fw.write(root); 
         _conn->sendInLoop(ans);
         ResultQue empty;
         _resultQue.swap(empty);//清空队列

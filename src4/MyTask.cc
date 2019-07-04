@@ -1,6 +1,8 @@
+
+#pragma once
 #include "MyTask.h"
 #include "EditDistance.h"
-
+#include  "Thread.h"
 namespace  hk
 {
 
@@ -8,15 +10,48 @@ MyTask::MyTask(MyDict & dict,const string & queryWord,const TcpConnectionPtr & c
 :_dict(dict)
 ,_queryWord(queryWord)
 ,_conn(conn)
+,_pCacheManager(CacheManager::getCacheManager()) 
+//拿到cacheManager对象的指针
 {
-   // cout<<"MyTask()"<<endl;
+    cout<<"MyTask()"<<endl;
 }
 
+//运行在线程池的某个子线程中
 void MyTask::execute()
 {
-    queryIndexTable();//先检查索引 再计算编辑距离
-    insertQueue();
-    response();
+    cout<<"我是 "<<threadNum<<" 线程,线程ID = "<<pthread_self()<<endl;
+    //decode
+   // CacheManager * _pCacheManager = CacheManager::getCacheManager();
+    Cache & cache = _pCacheManager->getCache(threadNum);
+    //在子线程缓存中查找
+    //cout<<"xxxx"<<endl;
+    string results = cache.get(_queryWord);
+    cout<<"debug 1"<<endl;
+    if(!results.empty())
+    {
+        //子线程缓存命中
+        cout<<threadNum<<"号子线程缓存命中"<<endl;
+        _conn->sendInLoop(results);
+    }
+    else
+    {
+        //子线程缓存未命中
+        string retjson = _pCacheManager->getCache(0).get(_queryWord);
+        if(!retjson.empty())
+        {
+            cout<<threadNum<<"号子线程缓存未命中,主线程缓存命中."<<endl;
+            _conn->sendInLoop(retjson);
+        }
+        else
+        {
+            cout<<threadNum<<"号子线程和主线程缓存都没有命中"<<endl;
+            queryIndexTable();
+            //compute
+            insertQueue();
+            response(cache);//重载了response nb
+        }
+    }//else
+    cout<<"debug2"<<endl;
 }
 
 int MyTask::length(const string & str)
@@ -87,8 +122,6 @@ void MyTask::insertQueue()
     }
 
 }
-
-
 
 
 #if 0
@@ -206,7 +239,7 @@ int MyTask::distance(const string & rhs)
 }
 
 
-void MyTask::response()
+void MyTask::response(Cache & cache)
 {   
     //采用json数据格式发送
     Json::Value root;
@@ -217,13 +250,15 @@ void MyTask::response()
     }
     else
     {
+
         size_t n = 3 ;//发送三个候选词
         for(size_t idx = 0 ;idx < n ;idx++)
         {
             root[idx] =Json::Value(_resultQue.top()._word);
+            cout<<root[idx]<<" ";
+            //带引号的string 
             _resultQue.pop();
         }
-
 
 #if 0
         root["word1"] = Json::Value(_resultQue.top()._word);
@@ -238,8 +273,9 @@ void MyTask::response()
        // ss<<fw.write(root);
        // string  ans; 
        // ss>>ans;
-       string ans = fw.write(root);
+        string ans = fw.write(root);
         _conn->sendInLoop(ans);
+        cache.addElement(_queryWord,ans);
         ResultQue empty;
         _resultQue.swap(empty);//清空队列
    
