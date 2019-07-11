@@ -16,10 +16,10 @@ MyConf::MyConf(const string & filepath)
     string s1,s2;
     while(ifs>>s1>>s2)
     {
-        cout<<s1<<" "<<s2<<endl;
+       // cout<<s1<<" "<<s2<<endl;
         _configMap.insert(make_pair(s1,s2));
     }
-   // cout<<"MyConf(const string & filepath)"<<endl;
+    cout<<"MyConf(const string & filepath)"<<endl;
 }
 
 ConfigMap & MyConf::getConfigMap()

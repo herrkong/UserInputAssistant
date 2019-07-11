@@ -13,30 +13,27 @@ namespace  hk
 class Timer
 {
     using TimerCallback = function<void()>;
+
 public:
-    Timer(int initTime,int intervalTime,TimerCallback && cb)
-    :_fd(createTimerfd())
-     ,_initialTime(initTime)
-     ,_intervalTime(intervalTime)
-     ,_cb(move(cb))
-     ,_isStarted(false)
-    {
-        cout<<"Timer(int initTime,int intervalTime,TimerCallback && cb)"<<endl;
-    }
-    ~Timer()
-    {
-        cout<<"~Timer()"<<endl;
-    }
+    static Timer * createTimer();
+    static void destroy();
+    Timer * initTime(int initTime,int intervalTime,
+                     TimerCallback && cb);
 
     void start();
     void stop();
+    int  getFd();
     void setTimer(int initTime,int intervalTime);
-    void handleRead();
+    void handleRead();//包含读描述符和执行回写事件
+
 private:
+    Timer(){}
+    ~Timer(){}
     int createTimerfd();
 
 
 private:
+    static Timer * _ptimer ;
     int _fd;
     int _initialTime;
     int _intervalTime;

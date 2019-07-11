@@ -19,7 +19,8 @@ namespace hk
 
 class TcpConnection;
 using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
-using TcpConnectionCallback = function<void(const TcpConnectionPtr&)>;
+using TcpConnectionCallback = function<void(const TcpConnectionPtr &)>;
+//函数对象 参数是指向TcpConnnection对象的指针 
 
 class EventLoop;
 
@@ -28,7 +29,7 @@ class TcpConnection
 , public std::enable_shared_from_this<TcpConnection>
 {
 public:
-	TcpConnection(int fd, EventLoop * );
+	TcpConnection(int fd, EventLoop * loop );
 	~TcpConnection();
 
 	string receive();

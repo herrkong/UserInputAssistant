@@ -20,7 +20,7 @@ Acceptor::Acceptor(const string & ip,unsigned short port)
 ,_listensock()
 {
     
-    //cout<<"Acceptor(string & ip,unsigned short port)"<<endl;
+    cout<<"Acceptor(string & ip,unsigned short port)"<<endl;
 }
 
 

@@ -26,35 +26,11 @@ class Cache
 
 public:
 
-    Cache(int capacity)
-    :_head(new CacheNode)
-    ,_tail(new CacheNode)
-    ,_capacity(capacity)
-    ,_count(0)
-    {
+     Cache(int capacity);
     
-        cout<<"Cache(int capacity)"<<endl;
-        _head->pnext = _tail ;
-        _head->ppre = NULL ;
-        _tail->ppre = _head ;
-        _tail ->pnext = NULL ;
-    }
-
     //Cache(const Cache & cache);
     
-    ~Cache()
-    {
-        if(_head)
-        {
-            delete _head;
-        }
-        if(_tail)
-        {
-            delete _tail;
-        }
-        cout<<"~Cache()"<<endl;
-    }
-
+    ~Cache();
 
     //往缓存中添加数据 
     void addElement(const string & key,const string  & value);

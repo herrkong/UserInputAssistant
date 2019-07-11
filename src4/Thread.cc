@@ -25,7 +25,7 @@ struct ThreadData
     {
         //任务执行之前:do something
         threadNum = _Num ;
-        cout<<"我是"<<threadNum<<" 号线程"<<endl;
+        cout<<"我是 "<<threadNum<<"号线程"<<endl;
         if(_cb)
         {
             _cb();
@@ -50,7 +50,7 @@ void Thread::start()
     if(pthread_create(&_pthid,NULL,threadFunc,data))
     {
         perror("pthread_create");
-        return;
+        //return;
     }
     _isRunning = true;
 }

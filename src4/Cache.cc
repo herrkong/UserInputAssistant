@@ -3,6 +3,29 @@
 namespace hk
 {
 
+Cache::Cache(int capacity)
+:_head(new CacheNode)
+,_tail(new CacheNode)
+,_capacity(capacity)
+,_count(0)
+{
+    
+        cout<<"Cache(int capacity)"<<endl;
+        _head->pnext = _tail ;
+        _head->ppre = NULL ;
+        _tail->ppre = _head ;
+        _tail ->pnext = NULL ;
+}
+
+Cache::~Cache()
+{
+    //只剩下一个结点还delete tail 就double free了
+    if(_head)
+    {
+        delete _head;
+    }
+    cout<<"~Cache()"<<endl;
+}
 
 void Cache::addElement(const string & key,const string & value)
 {

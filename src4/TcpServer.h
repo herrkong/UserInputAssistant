@@ -9,6 +9,7 @@ namespace hk
 {
 
 using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
+
 using TcpConnectionCallback = 
     std::function<void(const TcpConnectionPtr &)>;
 

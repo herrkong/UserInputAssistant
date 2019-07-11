@@ -15,7 +15,7 @@ namespace  hk
 Socket::Socket(int fd)                                                  
 :_fd(fd)
 {
-   // cout<<"Socket(int fd)"<<endl;
+    cout<<"Socket(int fd)"<<endl;
 
 }
 

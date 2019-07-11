@@ -18,7 +18,7 @@ public:
      ,_isRunning(false)
      ,_cb(std::move(cb))
     {
-       // cout<<"Thread()"<<endl;
+       cout<<"Thread()"<<endl;
     }
     ~Thread();
 
@@ -29,9 +29,9 @@ private:
     static void * threadFunc(void * );
 
 private:
-    pthread_t _pthid;
-    bool _isRunning;
-    ThreadCallback _cb;
+    pthread_t _pthid;//线程id
+    bool _isRunning;//记录线程是否正在运行
+    ThreadCallback _cb;//执行任务的函数对象
 
 };
 

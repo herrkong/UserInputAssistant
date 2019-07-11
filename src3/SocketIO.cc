@@ -15,7 +15,7 @@ namespace  hk
 SocketIO::SocketIO(int fd)
     :_fd(fd)
 {
-   // cout<<"SocketIO(int fd)"<<endl;
+    cout<<"SocketIO(int fd)"<<endl;
 }
 
 SocketIO::~SocketIO()

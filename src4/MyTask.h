@@ -50,9 +50,9 @@ public:
     int length(const string & str); //获取单词长度
     int nBytesCode(const char ch);//获取每个字所占字节数
     int  distance(const string & rhs);//计算最小编辑距离
-    void  response(); //待发送的查询结果
-    void response(Cache & cache);//写进缓存
-
+   // void  response(); //待发送的查询结果
+    //void response(Cache & cache);//写进缓存
+    void createJson(string & results);
 private:
     MyDict & _dict;//词典
     string _queryWord;   //待查询单词

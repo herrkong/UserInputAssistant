@@ -26,10 +26,15 @@ EventLoop::EventLoop(Acceptor & acceptor)
 
 void EventLoop::loop()
 {
+    //cout<<"111"<<endl;
 	_isLooping = true;
 	while(_isLooping) {
+       // cout<<"222"<<endl;
+        //问题在出在了这里 waitEpollFd 
 		waitEpollFd();
+       // cout<<"333"<<endl;
 	}
+   // cout<<"444"<<endl;
 }
 
 void EventLoop::unloop()
@@ -48,45 +53,85 @@ void EventLoop::runInLoop(Functor && cb)
 	wakeup();
 }
 
+//问题在这里
 void EventLoop::waitEpollFd()
 {
-	int nready;
+	cout<<"111"<<endl;
+    int nready;
 	do {
 		nready = epoll_wait(_efd, &*_eventList.begin(), _eventList.size(), 5000);
+        cout<<"222"<<endl;
 	}while(nready == -1 && errno == EINTR);
-
-	if(nready == -1) {
+    cout<<"333"<<endl;
+	
+    if(nready == -1) 
+    {
 		perror("epoll_wait");
 		return;
-	} else if(nready == 0) {
+	} 
+    else if(nready == 0) 
+    {
 		cout << ">> epoll_wait timeout!" << endl;
-	} else {
-		if(size_t(nready) == _eventList.size()) {
+	} 
+    else 
+    {
+		if(size_t(nready) == _eventList.size()) 
+        {
+            //就绪事件列表扩容
 			_eventList.resize(2 * nready);
 		}
 
-		for(int idx = 0; idx != nready; ++idx) {
+		for(int idx = 0; idx != nready; ++idx) 
+        {
+            cout<<"444"<<endl;
 			int fd = _eventList[idx].data.fd;
-			if(fd == _acceptor.fd()) {
-				//处理新连接
-				if(_eventList[idx].events & EPOLLIN) {
+			
+            if(fd == _acceptor.fd()) 
+            {
+				cout<<"555"<<endl;
+                //处理新连接
+				if(_eventList[idx].events & EPOLLIN) 
+                {
 					handleNewConnection();
-				}
-			} else if(fd == _eventfd) {
-				if(_eventList[idx].events & EPOLLIN) {
-					handleRead();
-				   //	cout << ">>before doPendingFunctors()" << endl;
-					doPendingFunctors();//在这里发送数据
-					//cout << ">>after doPendingFunctors()" << endl;
-				}
-			} else {
-				//处理消息
-				if(_eventList[idx].events & EPOLLIN) {
-					handleMessage(fd);
+                    cout<<"666"<<endl;
 				}
 			}
-		}
-	}
+            else if(fd == _eventfd) //处理事件
+            {
+				if(_eventList[idx].events & EPOLLIN)
+                {
+                    cout<<"777"<<endl;
+                    //handleRead 有点问题
+					handleRead();
+				    cout << ">>before doPendingFunctors()" << endl;
+					doPendingFunctors();//在这里发送数据
+					cout << ">>after doPendingFunctors()" << endl;
+				}
+			}
+        #if 0
+            else if(fd == _timerfd) //处理时间超时回写事件
+            {
+                if(_eventList[idx].events & EPOLLIN)
+                {
+                    cout<<"更新缓存"<<endl;
+                    _pTimer->Timer::handleRead();
+                    //包含读取描述符和回写事件
+                }
+            }
+        #endif   
+            else 
+            {
+				 //处理消息
+				if(_eventList[idx].events & EPOLLIN) 
+                {
+                    cout<<"888"<<endl;
+                    //这里也有点问题
+					handleMessage(fd);
+                    cout<<"999"<<endl;
+				}
+			}
+		}//for
+	}//else
 }
 
 void EventLoop::handleNewConnection()
@@ -103,12 +148,17 @@ void EventLoop::handleNewConnection()
 	conn->handleConnectionCallback();
 }
 
+//这里看看
 void EventLoop::handleMessage(int fd)
 {
+   // cout<<"101010"<<endl;
 	bool isClosed = isConnectionClosed(fd);
+   // cout<<"111111"<<endl;
 	auto iter = _conns.find(fd);
 	assert(iter != _conns.end());//运行时断言
-
+   // cout<<"121212"<<endl;
+   // handleMessageCallback
+   // TcpConnection
 	if(!isClosed) {
 		iter->second->handleMessageCallback();
 	} else {
@@ -116,15 +166,20 @@ void EventLoop::handleMessage(int fd)
 		iter->second->handleCloseCallback();
 		_conns.erase(iter);
 	}
+    cout<<"131313"<<endl;
 }
-
+//还有这里
+//没有进去handleRead
 void EventLoop::handleRead()
 {
+    cout<<"141414"<<endl;
 	uint64_t howmany;
 	int ret = ::read(_eventfd, &howmany, sizeof(howmany));
+    cout<<"161616"<<endl;
 	if(ret != sizeof(howmany)) {
 		perror("read");
 	}
+    cout<<"151515"<<endl;
 }
 
 void EventLoop::wakeup()

@@ -5,11 +5,45 @@ using namespace std;
 namespace hk
 {
 
+Timer * Timer::createTimer()
+{
+    if(_ptimer == NULL)
+    {
+        _ptimer = new Timer();
+        atexit(destroy);
+    }
+    return _ptimer;
+}
+
+void Timer::destroy()
+{
+    if(_ptimer)
+        delete _ptimer ;
+}
+
+
+Timer * Timer::initTime(int initialTime,int intervalTime,TimerCallback && cb )
+{
+    
+    _fd = createTimerfd();
+    _initialTime = initialTime ;
+    _intervalTime = intervalTime ;
+    _cb = std::move(cb);
+    _isStarted = false ;
+    return _ptimer ;
+}
+
+int Timer::getFd()
+{
+    return _fd ;
+}
+
+
 void Timer::start()
 {
     _isStarted = true;
     setTimer(_initialTime,_intervalTime);
-
+# if 0
     struct pollfd pfd;
     pfd.fd = _fd;
     pfd.events = POLLIN ;
@@ -39,6 +73,9 @@ void Timer::start()
             }
         }
     }//while
+
+#endif
+
 }
 
 
@@ -85,8 +122,10 @@ void Timer::handleRead()
     {
         perror("read");
     }
+    if(_cb)//执行回调函数,回写Cache 
+        _cb();
 }
 
-
+Timer * Timer::_ptimer = createTimer();
 
 }//end of namespace hk

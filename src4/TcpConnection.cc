@@ -94,7 +94,9 @@ void TcpConnection::setConnectionCallback(const TcpConnectionCallback & cb)
 
 void TcpConnection::setMessageCallback(const TcpConnectionCallback & cb)
 {
-	_onMessage = std::move(cb);
+    //这里又打印了。。。
+    _onMessage = std::move(cb);
+    cout<<"191919"<<endl;
 }
 
 void TcpConnection::setCloseCallback(const TcpConnectionCallback & cb)
@@ -111,9 +113,12 @@ void TcpConnection::handleConnectionCallback()
 
 void TcpConnection::handleMessageCallback()
 {
+   // cout<<"171717"<<endl;
+    //_onMessage()的问题
 	if(_onMessage) {
 		_onMessage(shared_from_this());
 	}
+   // cout<<"181818"<<endl;
 }
 
 void TcpConnection::handleCloseCallback()

@@ -19,6 +19,7 @@ TcpConnection::TcpConnection(int fd, EventLoop * loop)
 , _isShutdwonWrite(false)
 , _loop(loop)
 {
+    cout<<"TcpConnection(int fd,EventLoop * loop)"<<endl;
 }
 
 TcpConnection::~TcpConnection()

@@ -98,7 +98,7 @@ int main()
     char buf[1024];
     memset(buf, 0, sizeof(buf));
     read(peerfd, buf, sizeof(buf));
-    printf("%s\n", buf);
+prin:tf("%s\n", buf);
 
     do_service(peerfd);
     return 0;
@@ -130,6 +130,7 @@ void do_service(int sockfd)
         sendTrain(sendbuf,sockfd);
         //read
         int nread = recvTrain(recvbuf,sockfd);
+
         if(nread == -1)
         {
             if(errno == EINTR)//中断操作

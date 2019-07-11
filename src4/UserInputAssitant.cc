@@ -7,11 +7,23 @@ namespace  hk
 
 UserInputAssitant::UserInputAssitant(const string & configFilePath)
 :_conf(configFilePath)
+,_pCacheManager(CacheManager::getCacheManager()->initCache())
+//初始化主Cache,并首次同步Cache
+,_pTimer(Timer::createTimer()->initTime(
+    stoi(_conf.getConfigMap()["begTime"]),
+    stoi(_conf.getConfigMap()["valTime"]),
+    bind(&CacheManager::periodicUpdateCaches,_pCacheManager)                                           ))
+,_threadpool(4,10)
 ,_tcpServer(_conf.getConfigMap().find("ip")->second,
             stoi(_conf.getConfigMap().find("port")->second))
-,_threadpool(4,10)
 {
+   // MyDict * pMydict = MyDict::getInstance();
+   // pMydict->en_init(
+        // _conf.getConfigMap()["dict"].c_str(),
+        // _conf.getConfigMap()["index"].c_str()
+                   // );
     _threadpool.start();
+    _pTimer->start();
     cout<<"服务器准备就绪!"<<endl;
 
 }
@@ -55,11 +67,16 @@ using namespace placeholders;
 
 void UserInputAssitant::start()
 {
-
+    //cout<<"233"<<endl;
     _tcpServer.setConnectionCallback(std::bind(&UserInputAssitant::onConnection, this, _1));
+   // cout<<"xxx"<<endl;
     _tcpServer.setMessageCallback(std::bind(&UserInputAssitant::onMessage, this, _1));
+   // cout<<"qqq"<<endl;
     _tcpServer.setCloseCallback(std::bind(&UserInputAssitant::onClose, this, _1));
+  // cout<<"www"<<endl;
+   //""问题出自这里TcpServer
     _tcpServer.start();
+   // cout<<"666"<<endl;
 
 }
 

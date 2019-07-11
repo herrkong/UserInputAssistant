@@ -9,7 +9,7 @@ MyTask::MyTask(MyDict & dict,const string & queryWord,const TcpConnectionPtr & c
 ,_queryWord(queryWord)
 ,_conn(conn)
 {
-   // cout<<"MyTask()"<<endl;
+     cout<<"MyTask()"<<endl;
 }
 
 void MyTask::execute()
@@ -222,7 +222,7 @@ void MyTask::response()
         for(size_t idx = 0 ;idx < n ;idx++)
         {
             root[idx] =Json::Value(_resultQue.top()._word);
-            cout<<root[idx]<<" ";
+           // cout<<root[idx]<<" ";
             //带引号的string 
             _resultQue.pop();
         }

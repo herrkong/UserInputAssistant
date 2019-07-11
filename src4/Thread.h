@@ -24,7 +24,7 @@ public:
      ,_cb(std::move(cb))
      ,_Num(Num)
     {
-       cout<<_Num<<"Thread()"<<endl;
+       cout<<_Num<<" Thread()"<<endl;
     }
    
     ~Thread();

@@ -4,6 +4,7 @@
 #include "MyConf.h"
 #include "MyDict.h"
 #include "MyTask.h"
+#include "Timer.h"
 namespace  hk
 {
 
@@ -23,8 +24,10 @@ public:
 
 private:
     MyConf  _conf;//配置文件对象
-    TcpServer _tcpServer;//网络编程对象
+    CacheManager * _pCacheManager ;
+    Timer * _pTimer;
     Threadpool _threadpool;//线程池对象
+    TcpServer _tcpServer;//网络编程对象
 };
 
 

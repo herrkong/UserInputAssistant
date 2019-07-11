@@ -13,8 +13,12 @@ TcpServer::TcpServer(const string & ip,unsigned short port)
 
 void TcpServer::start()
 {
+    //cout<<"111"<<endl;
     _acceptor.ready();
+    //cout<<"222"<<endl;
+   //问题出在loop这里 EventLoop 
     _loop.loop();
+    //cout<<"333"<<endl;
 }
 
 

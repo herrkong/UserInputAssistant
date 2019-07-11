@@ -22,16 +22,19 @@ void MyTask::execute()
     cout<<"我是 "<<threadNum<<" 线程,线程ID = "<<pthread_self()<<endl;
     //decode
    // CacheManager * _pCacheManager = CacheManager::getCacheManager();
+    string results;
     Cache & cache = _pCacheManager->getCache(threadNum);
     //在子线程缓存中查找
     //cout<<"xxxx"<<endl;
-    string results = cache.get(_queryWord);
+    string hotdata = cache.get(_queryWord);
     cout<<"debug 1"<<endl;
+   
     if(!results.empty())
     {
         //子线程缓存命中
         cout<<threadNum<<"号子线程缓存命中"<<endl;
-        _conn->sendInLoop(results);
+       // _conn->sendInLoop(results);
+        results = hotdata ;
     }
     else
     {
@@ -40,7 +43,8 @@ void MyTask::execute()
         if(!retjson.empty())
         {
             cout<<threadNum<<"号子线程缓存未命中,主线程缓存命中."<<endl;
-            _conn->sendInLoop(retjson);
+            //_conn->sendInLoop(retjson);
+            results = retjson ;
         }
         else
         {
@@ -48,11 +52,31 @@ void MyTask::execute()
             queryIndexTable();
             //compute
             insertQueue();
-            response(cache);//重载了response nb
+            //response(cache);//重载了response nb
+            //写进缓存
+            createJson(results);
+            cache.addElement(_queryWord,results);
         }
     }//else
-    cout<<"debug2"<<endl;
+
+    cout<<results<<endl;
+    _conn->sendInLoop(results);
+
 }
+
+void MyTask::createJson(string & results)
+{
+    Json::Value data ;
+    for(int i = 0 ; !_resultQue.empty() && i <3 ; ++i)
+    {
+        data[_queryWord].append(_resultQue.top()._word);
+        _resultQue.pop();
+    }
+    Json::FastWriter fw ;
+    results = fw.write(data);
+}
+
+
 
 int MyTask::length(const string & str)
 {
@@ -238,7 +262,7 @@ int MyTask::distance(const string & rhs)
 
 }
 
-
+# if 0 
 void MyTask::response(Cache & cache)
 {   
     //采用json数据格式发送
@@ -255,7 +279,7 @@ void MyTask::response(Cache & cache)
         for(size_t idx = 0 ;idx < n ;idx++)
         {
             root[idx] =Json::Value(_resultQue.top()._word);
-            cout<<root[idx]<<" ";
+            cout<<root[idx].asString()<<" ";
             //带引号的string 
             _resultQue.pop();
         }
@@ -275,11 +299,12 @@ void MyTask::response(Cache & cache)
        // ss>>ans;
         string ans = fw.write(root);
         _conn->sendInLoop(ans);
-        cache.addElement(_queryWord,ans);
         ResultQue empty;
+        cache.addElement(_queryWord,ans);
         _resultQue.swap(empty);//清空队列
    
     }//else
 }
+#endif
 
 }//end of namespace hk

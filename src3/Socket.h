@@ -12,8 +12,8 @@ public:
     explicit//抑制隐式转换
     Socket();
     ~Socket();
-    int fd() const;
-    void shutdownWrite();
+    int fd() const; //返回sockfd
+    void shutdownWrite();//关闭套接字的写端口
 
  
 private:

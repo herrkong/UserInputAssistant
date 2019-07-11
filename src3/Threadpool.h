@@ -22,7 +22,7 @@ public:
      ,_taskque(queSize)
      ,_isExit(false)
     {
-       // cout<<"Threadpool()"<<endl;
+        cout<<"Threadpool()"<<endl;
         _threads.reserve(_threadNum);
     }
     
@@ -35,10 +35,10 @@ private:
     Task  getTask();
 
 private:
-    size_t _threadNum;
-    size_t _queSize;
-    vector<unique_ptr<Thread>> _threads;
-    TaskQueue _taskque;
+    size_t _threadNum;//线程数
+    size_t _queSize;//任务队列大小
+    vector<unique_ptr<Thread>> _threads;//线程对象的容器
+    TaskQueue _taskque;//任务队列
     bool _isExit;
 };
 
